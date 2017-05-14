@@ -42,7 +42,6 @@ if __name__ == "__main__":
     InsertionSort.sort(numbers)
     if is_sorted(numbers):
         print("succeed to sort numbers")
-        print(numbers)
     else:
         print("fail to sort numbers")
-        print(numbers)
+    print(numbers)

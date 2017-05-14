@@ -17,25 +17,19 @@
 
 """
 
-from sort.utils import get_numbers, swap, is_sorted
+from sort.utils import get_numbers, is_sorted
 
 
 class SelectionSort:
     @staticmethod
-    def sort(array=None):
-        if array is None:
-            array = []
-        else:
-            assert isinstance(array, list)
-
+    def sort(array):
         length = len(array)
-
         for index in range(length):
             min_num_index = index
             for inner_index in range(index + 1, length):
                 if array[inner_index] < array[min_num_index]:
                     min_num_index = inner_index
-            swap(array, index, min_num_index)
+            array[index], array[min_num_index] = array[min_num_index], array[index]
 
 
 if __name__ == "__main__":
@@ -43,6 +37,8 @@ if __name__ == "__main__":
     print(numbers)
     SelectionSort.sort(numbers)
     if is_sorted(numbers):
-        print(numbers)
+        print("succeed to sort numbers")
     else:
         print("fail to sort numbers")
+    print(numbers)
+
