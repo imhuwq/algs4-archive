@@ -5,7 +5,7 @@ from operator import le
 
 def gen_numbers():
     with open("numbers.txt", "w") as f:
-        for i in range(10000):
+        for i in range(1000):
             number = random.randint(0, 100000)
             f.writelines(str(number) + "\n")
 
