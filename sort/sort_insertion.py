@@ -33,6 +33,8 @@ class InsertionSort:
                 if inner_key > key:
                     insert_index = inner_index
                     array[inner_index + 1] = inner_key
+                else:
+                    break
             array[insert_index] = key
 
 
