@@ -70,17 +70,54 @@ class MergeSort:
 
         # 如果 aux_array 左侧和右侧已经完全排好序, 则不用再 merge, 直接把 aux_array 复制到 array
         if aux_array[mid] < aux_array[mid + 1]:
-            array[lo:hi+1] = aux_array[lo:hi+1]
+            array[lo:hi + 1] = aux_array[lo:hi + 1]
 
         # 否则把 aux_array 已经排好序的左右两侧 merge 到 array
         else:
             MergeSort.merge(array, aux_array, lo, mid, hi)
 
 
+class MergeUpSort:
+    @staticmethod
+    def merge(array, lo, mid, hi):
+        left_index = lo
+        right_index = mid + 1
+
+        aux_array = array[:]
+        for index in range(lo, hi + 1):
+            if left_index > mid:
+                array[index] = aux_array[right_index]
+                right_index += 1
+            elif right_index > hi:
+                array[index] = aux_array[left_index]
+                left_index += 1
+            elif aux_array[right_index] > aux_array[left_index]:
+                array[index] = aux_array[left_index]
+                left_index += 1
+            else:
+                array[index] = aux_array[right_index]
+                right_index += 1
+
+
+    @staticmethod
+    def sort(array):
+        length = len(array)
+
+        size = 1
+        while size < length:
+            lo = 0
+            while lo < length - size:
+                mid = lo + size - 1
+                hi = min(lo + size + size - 1, length - 1)
+                MergeUpSort.merge(array, lo, mid, hi)
+                lo += size * 2
+            size *= 2
+
+
 if __name__ == "__main__":
     numbers = get_numbers()
     print(numbers)
-    MergeSort.sort(numbers)
+    MergeUpSort.sort(numbers)
     if is_sorted(numbers):
         print("succeed to sort numbers")
     else:
