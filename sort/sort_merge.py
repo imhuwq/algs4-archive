@@ -98,7 +98,6 @@ class MergeUpSort:
                 array[index] = aux_array[right_index]
                 right_index += 1
 
-
     @staticmethod
     def sort(array):
         length = len(array)
