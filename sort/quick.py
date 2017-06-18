@@ -1,6 +1,6 @@
 from random import shuffle
 
-from algs.utils import is_sorted, numbers
+from utils import is_sorted, numbers
 
 
 class Quick:
