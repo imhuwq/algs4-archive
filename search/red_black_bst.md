@@ -7,7 +7,7 @@
 普通二叉树最大的问题在于，插入有序的序列会使二叉树会成为 N 的深度。  
 红黑树允许每个节点上最多挂两个 Node， 每当第三个 Node 插入的时候， 把中间值的 Node 往上冒泡。  
 如果在 root 上有三个 Node， 把中间的 Node 上冒做为新的 root。  
-由此可见，红黑树的深度是通过 root 往上冒增加的， 从而保证了每条路径到 root 的深度一致为 lg N。  
+由此可见，红黑树的深度是通过 root 往上冒增加的， 从而保证了每条路径到 root 的深度一致为 lg N (黑 Node 数量一致)。  
 
 ### 红黑树的程序表达
 红黑树是二叉树的一个变种， 数据结构和大部分行为与二叉树的几乎一样。 
@@ -16,15 +16,13 @@
 
 ```python
 
-RED = 1
-BLACK = 0
+RED = True
+BLACK = False
 
 class Node:
     def __init__(self, key, value, color):
         self.key = key
         self.value = value
-        if color not in [0, 1]:
-            raise AttributeError("color must be 1 for 'RED' or 0 for 'BLACK'")
         self.color = color
         self.size = 1  # node 的子 node 数量，包括自己
         
@@ -43,23 +41,32 @@ class Node:
 
 3. 新插入的 Node 的颜色默认为红色。 新插入的 Node 总是倾向于和已有的 Node 挤到同一个节点里；  
 
-4. 每个 Node 只能与一个红 Node 连接（包括自己）。 因为红黑树允许每个节点有最多两个 Node。
+4. 每个 Node 只能与一个红 Node 连接（包括自己）。 因为红黑树允许每个节点有最多两个 Node；  
 
-红黑树的所有行为都是根据以上四点而来。  
+5. 每条路径上黑色的 Node 数量一致（深度一致）。  
+
+红黑树的所有行为都是根据以上五点而来。  
 
 #### 增加 Node
+插入 Node 遵循一个思路， 即插入的 Node 总是和其它 Node 挤在一个节点里面(插入的 Node 颜色为红色)。  
+当被插入的 Node 使节点包含多余两个节点时， 把中间的那个 Node 往上冒泡。 最终使 Root 往上冒了一级。  
+
+我们从最简单的情况开始分析：  
 在最开始的情况下， 红黑树只有一个根 Node， 根据特性1， 其颜色为黑色；  
 现在插入一个 Node， 根据特性3， 其颜色为红色： 
  - 当它比 Root 小时， 插入位置在 Root 左侧；
  - 当它比 Root 大时， 插入位置在 Root 右侧， 违反特性2， 这时需要把右侧的红 Node 旋转到左侧。
 ```python
+RED = True
+BLACK = False
+
 def rotate_left(node):
     """把 node 右侧的 node 旋转到左侧 """
     new_node = node.right
     node.right = new_node.left
     new_node.left = node
     new_node.color = node.color
-    node.color = 1  # RED
+    node.color = RED
     new_node.size = node.size
     node.size = 1 + node.left.size + node.right.size
 
@@ -69,7 +76,7 @@ def rotate_right(node):
     node.left = new_node.right
     new_node.right = node
     new_node.color = node.color
-    node.color = 1  # RED
+    node.color = RED
     new_node.size = node.size
     node.size = 1 + node.left.size + node.right.size
 ```
@@ -81,9 +88,9 @@ def rotate_right(node):
 ```python
 def flip_color(node):
     """把 node 及其子 node 的颜色翻转"""
-    node.left.color = 0  # BLACK
-    node.right.color = 0  # BLACK
-    node.color = 1  # RED
+    node.left.color = not node.left.color
+    node.right.color = not node.right.color
+    node.color = not node.color
 ```
 把一个 node 的颜色变成红色， 其实就是在把它往上挤。 `flip_color` 其实是在把挤在一个节点里的三个 Node 的中间那个往上冒泡。  
 需要注意的是， Root 的颜色需要始终为黑色。  
@@ -91,15 +98,13 @@ def flip_color(node):
 以上几个例子覆盖了所有的新增 Node 时需要处理的情况。  
 ```python
 
-RED = 1
-BLACK = 0
+RED = True
+BLACK = False
 
 class Node:
     def __init__(self, key, value, color):
         self.key = key
         self.value = value
-        if color not in [0, 1]:
-            raise AttributeError("color must be 1 for 'RED' or 0 for 'BLACK'")
         self.color = color
         self.size = 1  # node 的子 node 数量，包括自己
         
@@ -154,9 +159,9 @@ class RedBlackBST:
     @staticmethod       
     def flip_color(node):
         """把 node 及其子 node 的颜色翻转"""
-        node.left.color = BLACK
-        node.right.color = BLACK
-        node.color = RED
+        node.left.color = not node.left.color
+        node.right.color = not node.right.color
+        node.color = not node.color
         return node
     
     @staticmethod
@@ -188,3 +193,184 @@ class RedBlackBST:
     def put(self, key, value):
         self.root = self._put(key, value, self.root)
 ```
+
+#### 删除 Node
+被删除的 Node 只能是红色的 Node, 否则会违反红黑树的特性 5。    
+如果它不是叶 Node， 则把它替换成它右侧的最小 Node， 然后再删除右侧的最小 Node。  
+
+也就是说最终的删除操作是在删除某个树里面的最小 Node， 而且这个 Node 必须放在一个包含两个 Node 节点中。  
+
+最小的 Node 一定是左侧的子 Node， 所以删除某个树的最小 Node 也就是一个递归的从左侧子树里面删除最小 Node 的方法：  
+```python
+
+def delete_min(node):
+    if node.left is None:
+        return None
+    node.left = delete_min(node.left)
+    return node
+```
+
+但被删除的 Node 必须放在一个包含两个 Node 节点中，如果左侧的节点不是包含两个 node 的节点， 那还要做点什么呢？  
+```python
+Red = True
+Black = False
+
+def is_red(node):
+    if node is None:
+        return False
+    return node.color == Red 
+
+def do_something(node):
+    return node
+
+
+def delete_min(node):
+    if node.left is None:
+        return None
+    if not is_red(node.left) and not is_red(node.left.left):  # 如果左侧的节点不是包含两个 node 的节点， 那还要做点什么呢？
+        node = do_something(node)
+    node.left = delete_min(node.left)
+    return node
+```
+
+我们还要做点什么呢？我们有两个办法， 一是把 node.left 和 node 自己放到一个节点来， 二是把 node.left 和 node.left.left 放到一个节点来。  
+- 对 R 执行 `flip_color` 把左右两个子 Node 和 R 放到一个节点里面来， 如果 R 之前和它的父 Node 在一个节点，则 R 降一级， 否则两个子节点升一级；  
+- 如果 R 的右节点只有一个 Node， 那这时什么都不用做了， 如果 R 的右节点有两个 Node， 那么就有四个 Node 在一个节点了， 这时我们把右节点的一个 Node 移到左边来。  
+
+```python
+
+def move_red_left(node):
+    flip_color(node)
+    if is_red(node.right.left):
+        node.right = rotate_right(node.right)
+        node = rotate_left(node)
+        flip_color(node)
+    return node
+    
+do_something = move_red_left
+
+```  
+
+很明显 `move_red_left` 可能会造成一些有三个 node 的节点， 在红黑树的操作过程中， 临时的 3 个 Node 的节点是 OK 的， 最后再去平衡以下它就好了。  
+
+```python
+
+def balance_node(node):
+    if is_red(node.right):
+        node = rotateLeft(h)
+    if is_red(node.left) && is_red(node.left.left):
+        node = rotateRight(h)
+    if is_red(node.left) && is_red(node.right):
+        flipColors(node)
+    node.size = size(node.left) + size(node.right) + 1
+    return node
+```
+
+至此， 我们就完整地实现了 `delete_min` 的过程。  
+
+我们再来实现完整的 `delete` 过程。  
+从 node 删除 Node x 时， x.key 可能等于 node.key， 可能大于或者小于 node.key。  
+当 x.key 小于 node.key 时， 从 node 左侧的子树中继续删除 key；  
+当 x.key 大于 node.key 时， 从 node 右侧的子树中继续删除 key；
+当 x.key 等于 node.key 时， 又要区别 node 是不是叶 Node, 如果是， 则直接删除就好了， 否则就要把 node 换成 node 右侧子树的最小 Node ， 再删除右侧子树的最小 Node。
+
+怎么判断 node 是不是叶 Node 呢？ 当 node 的左侧和右侧为空时。 但是还有一个办法：  当 node 
+
+显然， `delete` 也可以用递归实现。  
+
+```python
+
+def delete(node, key):
+    if key < node.key:
+        node.left = delete(node.left, key)
+    
+    else:
+        if key == node.key and node.left is None and node.right is None:
+            return None
+        elif key == node.key:
+            node.val = get(node.right, min(node.right).key) 
+            node.key = min(node.right).key
+            node.right = delete_min(node.right)
+        else:
+            node.right = delete(node.right, key)
+```
+
+但是这个 `delete` 方法并没有保证从 node 的左节点或者右节点删除 Node 时， 它们包含两个 Node。所以还需要改进：  
+
+
+```python
+
+def move_right_left(node):
+    flip_color(node)
+    if is_red(node.left.left):
+        node = rotate_right(node)
+        flip_color(node)
+    return node
+
+def delete(node, key):
+    if key < node.key:
+        if not is_red(node.left) and not is_red(node.left.left):
+            node = move_red_left(node)
+        node.left = delete(node.left, key)
+    
+    else:
+        if key == node.key and node.left is None and node.right is None:
+            return None
+            
+        if not is_red(node.right) and not is_red(node.right.left):
+            node = move_red_right(node)
+            
+        if key == node.key:
+            node.val = get(node.right, min(node.right).key) 
+            node.key = min(node.right).key
+            node.right = delete_min(node.right)
+        else:
+            node.right = delete(node.right, key)
+    
+    return balance(node)
+```
+
+node 左侧子 Node 为黑色， 右侧为 None 的情况违反红黑树的特性， 所以上述流程中，判断 node 是否为叶 Node 和 Node 右侧是否为单节点的情况可以稍加改进:  
+```python
+
+def move_right_left(node):
+    flip_color(node)
+    if is_red(node.left.left):
+        node = rotate_right(node)
+        flip_color(node)
+    return node
+
+def delete(node, key):
+    if key < node.key:
+        if not is_red(node.left) and not is_red(node.left.left):
+            node = move_red_left(node)
+        node.left = delete(node.left, key)
+    
+    else:
+        if is_red(node.left):
+            # node 左侧为红 Node 时， 把 红 Node 旋转到右边
+            # 可以略过 move_red_right 的情况， 
+            # 也可以略过检查 node.left is Node 的情况
+            node = rotate_right(node)  
+            
+        if key == node.key and node.right is None:
+            return None
+            
+        if not is_red(node.right) and not is_red(node.right.left):
+            node = move_red_right(node)
+            
+        if key == node.key:
+            node.val = get(node.right, min(node.right).key) 
+            node.key = min(node.right).key
+            node.right = delete_min(node.right)
+        else:
+            node.right = delete(node.right, key)
+    
+    return balance(node)
+```
+
+#### 总结
+红黑树就是二叉树， 它有两个最根本的特性：允许一个节点两个 Node， 保证每条路径深度相同。它的其它特性都是实现或者保持以上两个特性的。  
+有人说算法嘛， 主要是理解思维。开始我是相信的， 看了红黑树的实现后， 我不信了。 红黑树的思维， 我一个月前就理解了， 但它的程序实现， 到现在还是模模糊糊。  
+*Algorithm 4th Edition* 这本书思路讲得很清晰， 但是它给出的算法实现还是太精巧了， 主动做了很多优化。  
+就这篇文章， 花了两个周末大部分时间，一度想从此放弃算法这种东西。  
