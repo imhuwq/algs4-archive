@@ -3,3 +3,6 @@
 *.pyc
 te.py
 te.json
+
+cmake-build-debug
+*/data/large*.txt
