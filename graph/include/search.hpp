@@ -15,20 +15,20 @@ using namespace algs4;
 namespace algs4 {
     class Search {
     public:
-        Search(Graph &pGraph, const unsigned long &pSource) : marked(pGraph.V(), false) {};
+        Search(Graph &pGraph, const int &pSource) : marked(pGraph.V(), false) {};
 
-        bool Marked(unsigned long v) { return marked[v]; }
+        bool Marked(int v) { return marked[v]; }
 
-        unsigned long Count() { return count; }
+        int Count() { return count; }
 
     protected:
         vector<bool> marked;
-        unsigned long count = 0;
+        int count = 0;
     };
 
     class DepthFirstSearch : public Search {
     public:
-        DepthFirstSearch(Graph &pGraph, const unsigned long &pSource) : Search(pGraph, pSource) {
+        DepthFirstSearch(Graph &pGraph, const int &pSource) : Search(pGraph, pSource) {
             if (pSource > pGraph.V()) {
                 cerr << "source " << pSource << " is out of graph range" << endl;
             }
@@ -36,8 +36,12 @@ namespace algs4 {
         }
 
     private:
-        void DFS(Graph &pGraph, const unsigned long &pSource) {
-
+        void DFS(Graph &pGraph, const int &pSource) {
+            marked[pSource] = true;
+            count++;
+            for (int w:pGraph.ADJ(pSource)) {
+                if (!marked[w]) DFS(pGraph, w);
+            }
         }
     };
 }
