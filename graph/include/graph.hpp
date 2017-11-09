@@ -17,44 +17,44 @@ using namespace algs4;
 namespace algs4 {
     class Graph {
     private:
-        int v;
-        int e;
-        vector<vector<int>> adj;
+        unsigned long v = 0;
+        unsigned long e = 0;
+        vector<vector<unsigned long>> adj;
 
     public:
-        explicit Graph(const int &pV) : v(pV), e(0), adj(v) {}
+        explicit Graph(const unsigned long &pV) : v(pV), e(0), adj(v) {}
 
         explicit Graph(InStream &pIn) {
             v = pIn.ReadInt();
-            int edge = pIn.ReadInt();
+            unsigned long edge = pIn.ReadInt();
             adj.assign(v, {});
-            for (int index = 0; index < edge; index++) {
-                int v = pIn.ReadInt();
-                int w = pIn.ReadInt();
+            for (unsigned long index = 0; index < edge; index++) {
+                unsigned long v = pIn.ReadInt();
+                unsigned long w = pIn.ReadInt();
                 AddEdge(v, w);
             }
         }
 
-        int V() { return v; }
+        unsigned long V() { return v; }
 
-        int E() { return e; }
+        unsigned long E() { return e; }
 
-        void AddEdge(int v, int w) {
+        void AddEdge(unsigned long v, unsigned long w) {
             adj[v].push_back(w);
             adj[w].push_back(v);
             e++;
         }
 
-        vector<int> ADJ(int v) {
+        vector<unsigned long> ADJ(unsigned long v) {
             return adj[v];
         }
 
         string ToString() {
             ostringstream os;
             os << "Graph: " << v << " vertices, " << e << " edges\n";
-            for (int index = 0; index < v; index++) {
+            for (unsigned long index = 0; index < v; index++) {
                 os << index << ": ";
-                for (int w:ADJ(index)) {
+                for (unsigned long w:ADJ(index)) {
                     os << w << " ";
                 }
                 os << "\n";

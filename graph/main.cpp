@@ -14,9 +14,7 @@ int main(int argc, const char **argv) {
     const string mediumG = "/home/john/git/github/algs4/graph/data/mediumG.txt";
     const string largeG = "/home/john/git/github/algs4/graph/data/largeG.txt";
 
-    ifstream input(largeG);
-    InStream in(input);
+    InStream in(tinyG);
     Graph graph(in);
     cout << graph.ToString() << endl;
-    input.close();
 }

@@ -5,6 +5,8 @@
 #ifndef ALGS4_GRAPH_COMMON_HPP
 #define ALGS4_GRAPH_COMMON_HPP
 
+#include <string>
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -13,14 +15,19 @@ namespace algs4 {
 
     class InStream {
     private:
-        istream &in;
+        string inputPath = "";
+        ifstream input;
     public:
-        explicit InStream(istream &pIn) : in(pIn) {}
+        explicit InStream(const string &pFilePath) : inputPath(pFilePath), input(pFilePath) {}
 
         const int ReadInt() {
             int rInt = INT32_MAX;
-            if (in) in >> rInt;
+            if (input) input >> rInt;
             return rInt;
+        }
+
+        ~InStream() {
+            input.close();
         }
     };
 }
