@@ -31,6 +31,7 @@ namespace algs4 {
         DepthFirstSearch(Graph &pGraph, const int &pSource) : Search(pGraph, pSource) {
             if (pSource > pGraph.V()) {
                 cerr << "source " << pSource << " is out of graph range" << endl;
+                exit(-1);
             }
             DFS(pGraph, pSource);
         }

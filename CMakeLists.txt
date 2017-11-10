@@ -6,11 +6,11 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(include)
 
 # for graph
-file(GLOB TEST_CLIENTS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/src/graph src/graph/*.cpp)
-foreach (testclientsrc ${TEST_CLIENTS})
-    string(REPLACE ".cpp" "" testname ${testclientsrc})
-    string(CONCAT testclientsrc ${CMAKE_CURRENT_SOURCE_DIR}/src/graph/ ${testclientsrc})
-    add_executable(${testname} ${testclientsrc})
-endforeach (testclientsrc ${TEST_CLIENTS})
+file(GLOB GRAPH_TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/src/graph src/graph/*.cpp)
+foreach (graph_test_src ${GRAPH_TEST_SRCS})
+    string(REPLACE ".cpp" "" testname ${graph_test_src})
+    string(CONCAT graph_test_src ${CMAKE_CURRENT_SOURCE_DIR}/src/graph/ ${graph_test_src})
+    add_executable(${testname} ${graph_test_src})
+endforeach (graph_test_src ${GRAPH_TEST_SRCS})
 
 add_executable(main main.cpp)

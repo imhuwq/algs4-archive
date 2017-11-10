@@ -5,6 +5,7 @@
 #ifndef ALGS4_UTILS_HPP
 #define ALGS4_UTILS_HPP
 
+#include <iostream>
 #include <vector>
 #include <string>
 
