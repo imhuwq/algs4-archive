@@ -5,4 +5,4 @@ te.py
 te.json
 
 cmake-build-debug
-*/data/large*.txt
+data/large*.txt

@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "utils.hpp"
-#include "search.hpp"
+#include "graph/search.hpp"
 
 using namespace std;
 using namespace algs4;

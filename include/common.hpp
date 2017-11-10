@@ -2,8 +2,8 @@
 // Created by john on 11/8/17.
 //
 
-#ifndef ALGS4_GRAPH_COMMON_HPP
-#define ALGS4_GRAPH_COMMON_HPP
+#ifndef ALGS4_COMMON_HPP
+#define ALGS4_COMMON_HPP
 
 #include <string>
 #include <fstream>
@@ -32,4 +32,4 @@ namespace algs4 {
     };
 }
 
-#endif //ALGS4_GRAPH_COMMON_HPP
+#endif //ALGS4_COMMON_HPP

@@ -2,8 +2,8 @@
 // Created by john on 11/10/17.
 //
 
-#ifndef ALGS4_GRAPH_UTILS_HPP
-#define ALGS4_GRAPH_UTILS_HPP
+#ifndef ALGS4_UTILS_HPP
+#define ALGS4_UTILS_HPP
 
 #include <vector>
 #include <string>
@@ -29,4 +29,4 @@ namespace algs4 {
     };
 }
 
-#endif //ALGS4_GRAPH_UTILS_HPP
+#endif //ALGS4_UTILS_HPP
