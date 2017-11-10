@@ -5,7 +5,7 @@
 #ifndef ALGS4_PATHS_HPP
 #define ALGS4_PATHS_HPP
 
-#include <deque>
+#include <queue>
 #include <vector>
 
 #include "graph.hpp"
@@ -16,7 +16,10 @@ namespace algs4 {
     class Paths {
     public:
         Paths(Graph &pGraph, const int &pSource) : marked(pGraph.V(), false), edgeTo(pGraph.V(), -1), source(pSource) {
-
+            if (pSource > pGraph.V()) {
+                cerr << "source " << pSource << " is out of graph range" << endl;
+                exit(-1);
+            }
         }
 
         bool HasPathTo(const int &pV) { return marked[pV]; }
@@ -41,20 +44,43 @@ namespace algs4 {
     class DepthFirstPaths : public Paths {
     public:
         DepthFirstPaths(Graph &pGraph, const int &pSource) : Paths(pGraph, pSource) {
-            if (pSource > pGraph.V()) {
-                cerr << "source " << pSource << " is out of graph range" << endl;
-                exit(-1);
-            }
             DFS(pGraph, source);
         }
 
     private:
-        void DFS(Graph &pGraph, const int &pSource) {
-            marked[pSource] = true;
-            for (int w:pGraph.ADJ(pSource)) {
+        void DFS(Graph &pGraph, const int &pV) {
+            marked[pV] = true;
+            for (int w:pGraph.ADJ(pV)) {
                 if (!marked[w]) {
-                    edgeTo[w] = pSource;
+                    edgeTo[w] = pV;
                     DFS(pGraph, w);
+                }
+            }
+        }
+    };
+
+    class BreadthFirstPaths : public Paths {
+    public:
+        BreadthFirstPaths(Graph &pGraph, const int &pSource) : Paths(pGraph, pSource) {
+            BFS(pGraph, pSource);
+        }
+
+    private:
+        void BFS(Graph &pGraph, const int &pS) {
+            queue<int> vQueue;
+            marked[pS] = true;
+            vQueue.push(pS);
+
+            while (!vQueue.empty()) {
+                int v = vQueue.front();
+                vQueue.pop();
+
+                for (int w: pGraph.ADJ(v)) {
+                    if (!marked[w]) {
+                        marked[w] = true;
+                        edgeTo[w] = v;
+                        vQueue.push(w);
+                    }
                 }
             }
         }

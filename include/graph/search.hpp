@@ -15,7 +15,12 @@ using namespace algs4;
 namespace algs4 {
     class Search {
     public:
-        Search(Graph &pGraph, const int &pSource) : marked(pGraph.V(), false) {};
+        Search(Graph &pGraph, const int &pSource) : marked(pGraph.V(), false) {
+            if (pSource > pGraph.V()) {
+                cerr << "source " << pSource << " is out of graph range" << endl;
+                exit(-1);
+            }
+        };
 
         bool Marked(int v) { return marked[v]; }
 
@@ -29,10 +34,6 @@ namespace algs4 {
     class DepthFirstSearch : public Search {
     public:
         DepthFirstSearch(Graph &pGraph, const int &pSource) : Search(pGraph, pSource) {
-            if (pSource > pGraph.V()) {
-                cerr << "source " << pSource << " is out of graph range" << endl;
-                exit(-1);
-            }
             DFS(pGraph, pSource);
         }
 
