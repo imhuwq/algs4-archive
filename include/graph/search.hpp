@@ -39,6 +39,7 @@ namespace algs4 {
 
     private:
         void DFS(Graph &pGraph, const int &pSource) {
+            if (marked[pSource]) return;
             marked[pSource] = true;
             count++;
             for (int w:pGraph.ADJ(pSource)) {
