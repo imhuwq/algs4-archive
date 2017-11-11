@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "graph/common.hpp"
+#include "common.hpp"
 #include "include/graph/graph.hpp"
 
 using namespace std;
