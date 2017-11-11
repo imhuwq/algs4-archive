@@ -10,9 +10,9 @@
 #include "graph.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
-namespace algs4 {
+namespace graph {
     const bool BLACK = false;
     const bool RED = true;
 

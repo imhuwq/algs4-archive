@@ -11,9 +11,9 @@
 #include "graph.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
-namespace algs4 {
+namespace graph {
     class Components {
     public:
         explicit Components(Graph &pGraph) : id(pGraph.V(), -1) {}

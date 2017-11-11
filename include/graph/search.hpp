@@ -10,9 +10,9 @@
 #include "graph.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
-namespace algs4 {
+namespace graph {
     class Search {
     public:
         Search(Graph &pGraph, const int &pSource) : marked(pGraph.V(), false) {

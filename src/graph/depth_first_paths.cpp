@@ -4,11 +4,11 @@
 
 #include <string>
 
-#include "utils.hpp"
+#include "graph/utils.hpp"
 #include "graph/paths.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
 
 int main(int argc, const char **argv) {

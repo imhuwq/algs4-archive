@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace algs4 {
+namespace graph {
 
     class InStream {
     private:

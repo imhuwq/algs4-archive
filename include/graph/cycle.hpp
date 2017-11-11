@@ -10,9 +10,9 @@
 #include "graph.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
-namespace algs4 {
+namespace graph {
     class Cycle {
     public:
         Cycle(Graph &pGraph) : marked(pGraph.V(), false) {}

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace algs4 {
+namespace graph {
     class Paths {
     public:
         Paths(Graph &pGraph, const int &pSource) : marked(pGraph.V(), false), edgeTo(pGraph.V(), -1), source(pSource) {

@@ -12,9 +12,9 @@
 #include "common.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
-namespace algs4 {
+namespace graph {
     class Graph {
     private:
         int v = 0;

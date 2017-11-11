@@ -4,11 +4,11 @@
 
 #include <string>
 
-#include "utils.hpp"
+#include "graph/utils.hpp"
 #include "graph/bipartite.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
 int main(int argc, const char **argv) {
     pair<string, int> cmd = ParseCommandLine(argc, argv);

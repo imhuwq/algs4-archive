@@ -2,11 +2,11 @@
 #include <fstream>
 #include <iostream>
 
-#include "include/common.hpp"
+#include "graph/common.hpp"
 #include "include/graph/graph.hpp"
 
 using namespace std;
-using namespace algs4;
+using namespace graph;
 
 int main(int argc, const char **argv) {
     const string tinyG = "/home/john/git/github/algs4/data/tinyG.txt";

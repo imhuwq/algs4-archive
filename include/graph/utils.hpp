@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace algs4 {
+namespace graph {
     pair<string, int> ParseCommandLine(int argc, const char **argv) {
         if (argc < 3) {
             cerr << "Usage: executor [test_file_path] [source_vertex]" << endl;
