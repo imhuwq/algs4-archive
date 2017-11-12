@@ -7,3 +7,4 @@ te.json
 cmake-build-debug
 data/large*.txt
 data/leipzig1M.txt
+profile.out*

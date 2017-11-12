@@ -33,7 +33,7 @@ namespace search {
 
         int Size(NodePtr pNode) {
             if (pNode == nullptr) return 0;
-            return Size(pNode->left) + Size(pNode->right) + 1;
+            return pNode->size;
         }
 
         bool Contains(NodePtr pNode, Key pKey) {
