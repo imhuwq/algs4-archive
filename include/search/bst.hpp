@@ -31,26 +31,26 @@ namespace search {
 
         NodePtr root = nullptr;
 
-        int Size(NodePtr pNode) {
+        int Size(const NodePtr &pNode) {
             if (pNode == nullptr) return 0;
             return pNode->size;
         }
 
-        bool Contains(NodePtr pNode, Key pKey) {
+        bool Contains(const NodePtr &pNode, Key &pKey) {
             if (pNode == nullptr) return false;
             if (pKey > pNode->key) return Contains(pNode->right, pKey);
             else if (pKey < pNode->key) return Contains(pNode->left, pKey);
             else return true;
         }
 
-        void Get(NodePtr pNode, Key pKey, Value &rValue) {
+        void Get(const NodePtr &pNode, Key &pKey, Value &rValue) {
             if (pNode == nullptr) return;
             if (pKey > pNode->key) Get(pNode->right, pKey, rValue);
             else if (pKey < pNode->key) Get(pNode->left, pKey, rValue);
             else rValue = pNode->value;
         }
 
-        NodePtr Put(NodePtr pNode, Key pKey, Value pValue) {
+        NodePtr Put(NodePtr &pNode, Key &pKey, Value &pValue) {
             if (pNode == nullptr) return make_shared<Node>(pKey, pValue);
             if (pKey > pNode->key) pNode->right = Put(pNode->right, pKey, pValue);
             else if (pKey < pNode->key) pNode->left = Put(pNode->left, pKey, pValue);
@@ -59,7 +59,7 @@ namespace search {
             return pNode;
         }
 
-        NodePtr Min(NodePtr pNode) {
+        NodePtr Min(const NodePtr &pNode) {
             if (pNode == nullptr) return nullptr;
             if (pNode->left == nullptr) return pNode;
             return Min(pNode->left);
@@ -69,7 +69,7 @@ namespace search {
             return Min(root);
         }
 
-        NodePtr Max(NodePtr pNode) {
+        NodePtr Max(const NodePtr &pNode) {
             if (pNode == nullptr) return nullptr;
             if (pNode->right == nullptr) return pNode;
             return Max(pNode->right);
@@ -79,7 +79,7 @@ namespace search {
             return Max(root);
         }
 
-        NodePtr Floor(NodePtr pNode, const Key &pKey) {
+        NodePtr Floor(const NodePtr &pNode, const Key &pKey) {
             if (pNode == nullptr) return nullptr;
             if (pKey < pNode->key) return Floor(pNode->left, pKey);
             else if (pKey == pNode->key) return pNode;
@@ -89,31 +89,31 @@ namespace search {
             return lNode;
         }
 
-        NodePtr Celling(NodePtr pNode, const Key &pKey) {
+        const NodePtr Celling(const NodePtr &pNode, const Key &pKey) {
             if (pNode == nullptr) return nullptr;
 
             if (pKey > pNode->key) return Celling(pNode->right, pKey);
             if (pKey == pNode->key) return pNode;
 
-            NodePtr lNode = Celling(pNode->left, pKey);
+            const NodePtr& lNode = Celling(pNode->left, pKey);
             if (lNode == nullptr) return pNode;
             return lNode;
         }
 
-        void Nodes(NodePtr &pNode, const Key &pMinKey, const Key &pMaxKey, deque<NodePtr> &rNodes) {
+        void Nodes(const NodePtr &pNode, const Key &pMinKey, const Key &pMaxKey, deque<NodePtr> &rNodes) {
             if (pNode == nullptr) return;
             if (pMinKey < pNode->key) Nodes(pNode->left, pMinKey, pMaxKey, rNodes);
             if (pMinKey <= pNode->key and pNode->key <= pMaxKey) rNodes.push_back(pNode);
             if (pNode->key < pMaxKey) Nodes(pNode->right, pMinKey, pMaxKey, rNodes);
         }
 
-        deque<NodePtr> Nodes(NodePtr &pNode, const Key &pMinKey, const Key &pMaxKey) {
+        deque<NodePtr> Nodes(const NodePtr &pNode, const Key &pMinKey, const Key &pMaxKey) {
             deque<NodePtr> lNodes;
             Nodes(pNode, pMinKey, pMaxKey, lNodes);
             return lNodes;
         }
 
-        NodePtr Select(NodePtr &pNode, const int &pRank) {
+        NodePtr Select(const NodePtr &pNode, const int &pRank) {
             if (pNode == nullptr) return nullptr;
             int lSize = Size(pNode->left);
             if (pRank < lSize) return Select(pNode->left, pRank);
@@ -121,7 +121,7 @@ namespace search {
             else return pNode;
         }
 
-        int Rank(NodePtr &pNode, const Key &pKey) {
+        int Rank(const NodePtr &pNode, const Key &pKey) {
             if (pNode == nullptr) return -1;
             if (pKey < pNode->key) return Rank(pNode->left, pKey);
             else if (pKey > pNode->key) return Size(pNode->left) + 1 + Rank(pNode->right, pKey);
@@ -160,7 +160,7 @@ namespace search {
             return pNode;
         }
 
-        int MaxDepth(NodePtr &pNode) {
+        int MaxDepth(const NodePtr &pNode) {
             if (pNode == nullptr) return 0;
             return max(MaxDepth(pNode->left), MaxDepth(pNode->right)) + 1;
         }
@@ -168,15 +168,15 @@ namespace search {
     public:
         int Size() { return Size(root); }
 
-        bool Contains(Key pKey) {
+        bool Contains(const Key &pKey) {
             return Contains(root, pKey);
         }
 
-        void Get(Key pKey, Value &rValue) {
+        void Get(const Key &pKey, Value &rValue) {
             Get(root, pKey, rValue);
         }
 
-        void Put(Key pKey, Value pValue) {
+        void Put(const Key &pKey, Value pValue) {
             root = Put(root, pKey, pValue);
         }
 
