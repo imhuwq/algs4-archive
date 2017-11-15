@@ -2,18 +2,28 @@
 #include <fstream>
 #include <iostream>
 
-#include "common.hpp"
-#include "include/graph/graph.hpp"
-
 using namespace std;
-using namespace graph;
+
+class Test {
+private:
+    int v = 0;
+
+    int PrivateGetV() const {
+        return v;
+    }
+
+public:
+    Test(const int pV) : v(pV) {}
+
+    int GetV() const {
+        return PrivateGetV();
+    }
+};
 
 int main(int argc, const char **argv) {
-    const string tinyG = "/home/john/git/github/algs4/data/tinyG.txt";
-    const string mediumG = "/home/john/git/github/algs4/data/mediumG.txt";
-    const string largeG = "/home/john/git/github/algs4/data/largeG.txt";
+    Test t(12);
+    cout << t.GetV() << endl;
 
-    InStream in(tinyG);
-    Graph graph(in);
-    cout << graph.ToString() << endl;
+    const Test t2(22);
+    cout << t2.GetV() << endl;
 }

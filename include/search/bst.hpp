@@ -20,7 +20,7 @@ namespace search {
 
         class Node {
         public:
-            Node(Key pKey, Value pValue) : key(pKey), value(pValue) {}
+            Node(const Key &pKey, const Value &pValue) : key(pKey), value(pValue) {}
 
             Key key;
             Value value;
@@ -36,21 +36,21 @@ namespace search {
             return pNode->size;
         }
 
-        bool Contains(const NodePtr &pNode, Key &pKey) {
+        bool Contains(const NodePtr &pNode, const Key &pKey) {
             if (pNode == nullptr) return false;
             if (pKey > pNode->key) return Contains(pNode->right, pKey);
             else if (pKey < pNode->key) return Contains(pNode->left, pKey);
             else return true;
         }
 
-        void Get(const NodePtr &pNode, Key &pKey, Value &rValue) {
+        void Get(const NodePtr &pNode, const Key &pKey, Value &rValue) {
             if (pNode == nullptr) return;
             if (pKey > pNode->key) Get(pNode->right, pKey, rValue);
             else if (pKey < pNode->key) Get(pNode->left, pKey, rValue);
             else rValue = pNode->value;
         }
 
-        NodePtr Put(NodePtr &pNode, Key &pKey, Value &pValue) {
+        NodePtr Put(NodePtr &pNode, const Key &pKey, const Value &pValue) {
             if (pNode == nullptr) return make_shared<Node>(pKey, pValue);
             if (pKey > pNode->key) pNode->right = Put(pNode->right, pKey, pValue);
             else if (pKey < pNode->key) pNode->left = Put(pNode->left, pKey, pValue);
@@ -95,7 +95,7 @@ namespace search {
             if (pKey > pNode->key) return Celling(pNode->right, pKey);
             if (pKey == pNode->key) return pNode;
 
-            const NodePtr& lNode = Celling(pNode->left, pKey);
+            const NodePtr &lNode = Celling(pNode->left, pKey);
             if (lNode == nullptr) return pNode;
             return lNode;
         }
