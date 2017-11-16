@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 using namespace std;
@@ -25,9 +26,14 @@ public:
     }
 
     const string ReadString() {
-        string rStr = "";
+        string rStr;
         if (input) input >> rStr;
         return rStr;
+    }
+
+    bool ReadLine(string &rLine) {
+        if (getline(input, rLine)) return true;
+        return false;
     }
 
     bool IsEmpty() {

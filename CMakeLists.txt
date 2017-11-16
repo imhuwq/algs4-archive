@@ -27,3 +27,12 @@ foreach (graph_test_src ${GRAPH_TEST_SRCS})
     add_executable(${testname} ${graph_test_src})
     target_link_libraries(${testname} ${GPERFTOOLS_LIBRARIES})
 endforeach (graph_test_src ${GRAPH_TEST_SRCS})
+
+# for sort
+file(GLOB SORT_TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/src/sort src/sort/*.cpp)
+foreach (sort_test_src ${SORT_TEST_SRCS})
+    string(REPLACE ".cpp" "" testname ${sort_test_src})
+    string(CONCAT sort_test_src ${CMAKE_CURRENT_SOURCE_DIR}/src/sort/ ${sort_test_src})
+    add_executable(${testname} ${sort_test_src})
+    target_link_libraries(${testname} ${GPERFTOOLS_LIBRARIES})
+endforeach (sort_test_src ${SORT_TEST_SRCS})
