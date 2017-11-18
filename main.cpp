@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <fstream>
 #include <iostream>
 
@@ -20,10 +21,11 @@ public:
     }
 };
 
-int main(int argc, const char **argv) {
-    Test t(12);
-    cout << t.GetV() << endl;
 
-    const Test t2(22);
-    cout << t2.GetV() << endl;
+int main(int argc, const char **argv) {
+    string a = ",1,2,3, 5,,,,,";
+    vector<string> b = SplitString(a, ",");
+    for (string &s:b) {
+        cout << s << endl;
+    }
 }

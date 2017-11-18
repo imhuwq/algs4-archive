@@ -22,6 +22,8 @@ namespace graph {
         vector<vector<int>> adj;
 
     public:
+        Graph() = default;
+
         explicit Graph(const int &pV) : v(pV), e(0), adj(v) {}
 
         explicit Graph(InStream &pIn) {

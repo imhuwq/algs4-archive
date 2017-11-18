@@ -247,7 +247,7 @@ namespace search {
                 if (pKey == pNode->key and pNode->right == nullptr) return pNode->right;
                 if (!IsRed(pNode->right) and !IsRed(pNode->right->left)) pNode = MoveRedRight(pNode);
                 if (pKey == pNode->key) {
-                    NodePtr &lMinNode = Min(pNode->right);
+                    NodePtr lMinNode = Min(pNode->right);
                     pNode->key = lMinNode->key;
                     pNode->value = lMinNode->value;
                     pNode->right = DeleteMin(pNode->right);
@@ -298,7 +298,7 @@ namespace search {
         }
 
         bool MaxValue(Value &rValue) {
-            NodePtr &lNode = Max();
+            NodePtr lNode = Max();
             if (lNode == nullptr) return false;
             rValue = lNode->value;
             return true;
@@ -306,7 +306,7 @@ namespace search {
         }
 
         bool MinValue(Value &rValue) {
-            NodePtr &lNode = Min();
+            NodePtr lNode = Min();
             if (lNode == nullptr) return false;
             rValue = lNode->value;
             return true;
@@ -314,7 +314,7 @@ namespace search {
         }
 
         bool MaxItem(Key &rKey, Value &rValue) {
-            NodePtr &lNode = Max();
+            NodePtr lNode = Max();
             if (lNode == nullptr) return false;
             rKey = lNode->key;
             rValue = lNode->value;
@@ -323,7 +323,7 @@ namespace search {
         }
 
         bool MinItem(Key &rKey, Value &rValue) {
-            NodePtr &lNode = Min();
+            NodePtr lNode = Min();
             if (lNode == nullptr) return false;
             rKey = lNode->key;
             rValue = lNode->value;
