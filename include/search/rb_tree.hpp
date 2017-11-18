@@ -124,13 +124,7 @@ namespace search {
             else if (pKey < pNode->key) pNode->left = Put(pNode->left, pKey, pValue);
             else pNode->right = Put(pNode->right, pKey, pValue);
 
-            if (!IsRed(pNode->left) and IsRed(pNode->right)) pNode = RotateLeft(pNode);
-            if (IsRed(pNode->left) and IsRed(pNode->left->left)) pNode = RotateRight(pNode);
-            if (IsRed(pNode->left) and IsRed(pNode->right)) pNode = FlipColors(pNode);
-
-            int size = Size(pNode->left) + 1 + Size(pNode->right);
-            pNode->size = size;
-            return pNode;
+            return Balance(pNode);
         }
 
         NodePtr Max(NodePtr &pNode) {

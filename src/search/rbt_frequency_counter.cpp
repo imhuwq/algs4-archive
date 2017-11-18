@@ -32,32 +32,6 @@ int main(const int argc, const char **argv) {
         }
     }
 
-//    File (data/tinyTale.txt) Contains 21 Distinct Words which are Longer than 0
-//    File (data/tinyTale.txt) Contains 61 Words  which are Longer than 0
-//    Word: it, Count: 10
-//    PROFILE: interrupts/evictions/bytes = 0/0/64
-//    : 1
-//    age: 2
-//    belief: 1
-//    best: 1
-//    darkness: 1
-//    despair: 1
-//    epoch: 2
-//    foolishness: 1
-//    hope: 1
-//    incredulity: 1
-//    it: 10
-//    light: 1
-//    of: 10
-//    season: 2
-//    spring: 1
-//    the: 10
-//    times: 2
-//    was: 10
-//    winter: 1
-//    wisdom: 1
-//    worst: 1
-
     cout << "Input Done. Max Depth of RBT is: " << rbt.MaxDepth() << endl;
 
     string max;
