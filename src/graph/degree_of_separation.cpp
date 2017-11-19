@@ -12,14 +12,15 @@ using namespace std;
 using namespace graph;
 
 int main(const int argc, const char **argv) {
-    if (argc < 3) {
-        cerr << "Usage: executor [file_path] [separator] [source]";
+    if (argc < 4) {
+        cerr << "Usage: executor [file_path] [separator] [source] [destination]";
         exit(EXIT_FAILURE);
     }
 
     string pFileName = argv[1];
     string pSeparator = argv[2];
     string pSource = argv[3];
+    string pDestination = argv[4];
 
     SymbolGraph sg(pFileName, pSeparator);
 
@@ -27,26 +28,26 @@ int main(const int argc, const char **argv) {
         cerr << "Source: " << pSource << " not in database";
         exit(EXIT_FAILURE);
     }
-
     int lSourceIndex;
     sg.Index(pSource, lSourceIndex);
+
+    if (!sg.Contains(pDestination)) {
+        cerr << "Destination: " << pDestination << " not in database";
+        exit(EXIT_FAILURE);
+    }
+    int lDestinationIndex;
+    sg.Index(pDestination, lDestinationIndex);
+
     Graph g = sg.GetGraph();
     BreadthFirstPaths bfp(g, lSourceIndex);
-
-    vector<string> lDestinations = sg.Keys();
-    int lDestinationIndex;
-    for (const string &fDestination:lDestinations) {
-        if (fDestination == pSource) continue;
-        sg.Index(fDestination, lDestinationIndex);
-        if (bfp.HasPathTo(lDestinationIndex)) {
-            cout << "From " << pSource << " to " << fDestination << ": " << endl;
-            string fVertex;
-            for (const int &fVertexIndex:bfp.PathTo(lDestinationIndex)) {
-                sg.Key(fVertexIndex, fVertex);
-                cout << "  " << fVertex << endl;
-            }
-        } else {
-            cout << "From " << pSource << "to " << fDestination << " Does not Exist" << endl;
+    if (bfp.HasPathTo(lDestinationIndex)) {
+        cout << "From " << pSource << " to " << pDestination << ": " << endl;
+        string fVertex;
+        for (const int &fVertexIndex:bfp.PathTo(lDestinationIndex)) {
+            sg.Key(fVertexIndex, fVertex);
+            cout << "  " << fVertex << endl;
         }
+    } else {
+        cout << "From " << pSource << "to " << pDestination << " Does not Exist" << endl;
     }
 }
