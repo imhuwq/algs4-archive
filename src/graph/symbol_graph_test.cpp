@@ -8,11 +8,15 @@
 using namespace graph;
 
 int main(const int argc, const char **argv) {
-    pair<string, int> cmd = ParseCommandLine(argc, argv);
-    cout << "Test File: " << cmd.first << endl;
-    cout << "Source: " << cmd.second << endl;
+    if (argc < 3) {
+        cerr << "Usage: executor [test_file_path] [separator]";
+        exit(EXIT_FAILURE);
+    }
 
-    SymbolGraph sg(cmd.first, " ");
+    string pFile = argv[1];
+    string pSeparator = argv[2];
+
+    SymbolGraph sg(pFile, pSeparator);
     for (const string &key:sg.Keys()) {
         cout << key << ": " << endl;
         for (const string &adjKey:sg.ADJ(key)) {

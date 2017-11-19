@@ -12,7 +12,6 @@
 #include "common.hpp"
 
 using namespace std;
-using namespace graph;
 
 namespace graph {
     class Graph {

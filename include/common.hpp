@@ -6,6 +6,7 @@
 #define ALGS4_COMMON_HPP
 
 #include <string>
+#include <vector>
 #include <fstream>
 #include <sstream>
 #include <iostream>
