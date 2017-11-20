@@ -70,8 +70,8 @@ namespace graph {
 
     class DiGraph {
     private:
-        int v;
-        int e;
+        int v = 0;
+        int e = 0;
         vector<vector<int>> adj;
 
     public:

@@ -6,6 +6,7 @@
 #define ALGS4_GRAPH_SEARCH_HPP
 
 #include <vector>
+#include <queue>
 
 #include "graph.hpp"
 
@@ -44,6 +45,32 @@ namespace graph {
             count++;
             for (int w:pGraph.ADJ(pSource)) {
                 if (!marked[w]) DFS(pGraph, w);
+            }
+        }
+    };
+
+    class BreadthFirstSearch : public Search {
+    public:
+        BreadthFirstSearch(Graph &pGraph, const int &pSource) : Search(pGraph, pSource) {
+            BFS(pGraph, pSource);
+        }
+
+    private:
+        void BFS(Graph &pGraph, const int pSource) {
+            queue<int> lQueue;
+            marked[pSource] = true;
+            lQueue.push(pSource);
+
+            while (!lQueue.empty()) {
+                int lV = lQueue.back();
+                lQueue.pop();
+                for (int fW:pGraph.ADJ(lV)) {
+                    if (!marked[fW]) {
+                        marked[fW] = true;
+                        lQueue.push(fW);
+                        count++;
+                    }
+                }
             }
         }
     };
