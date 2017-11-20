@@ -46,8 +46,12 @@ namespace graph {
             e++;
         }
 
-        vector<int> ADJ(int v) {
-            return adj[v];
+        vector<int> ADJ(int pV) {
+            if (pV > v) {
+                cerr << pV << " is out of the digraph" << endl;
+                exit(EXIT_FAILURE);
+            }
+            return adj[pV];
         }
 
         string ToString() {
@@ -61,6 +65,69 @@ namespace graph {
                 os << "\n";
             }
             return os.str();
+        }
+    };
+
+    class DiGraph {
+    private:
+        int v;
+        int e;
+        vector<vector<int>> adj;
+
+    public:
+        DiGraph() = default;
+
+        explicit DiGraph(const int pV) : v(pV), e(0), adj(pV) {}
+
+        explicit DiGraph(InStream &pIn) {
+            v = pIn.ReadInt();
+            int edge = pIn.ReadInt();
+            adj.assign(v, {});
+            for (int index = 0; index < edge; index++) {
+                int v = pIn.ReadInt();
+                int w = pIn.ReadInt();
+                AddEdge(v, w);
+            }
+        }
+
+        int V() { return v; }
+
+        int E() { return e; }
+
+        void AddEdge(const int pV, const int pW) {
+            adj[pV].push_back(pW);
+            e++;
+        }
+
+        vector<int> ADJ(const int pV) {
+            if (pV > v) {
+                cerr << pV << " is out of the digraph" << endl;
+                exit(EXIT_FAILURE);
+            }
+            return adj[pV];
+        }
+
+        string ToString() {
+            ostringstream os;
+            os << "DiGraph: " << v << " vertices, " << e << "e edges" << endl;
+            for (int index = 0; index < v; index++) {
+                os << index << ": ";
+                for (int w:ADJ(index)) {
+                    os << w << " ";
+                }
+                os << "\n";
+            }
+            return os.str();
+        }
+
+        DiGraph Reverse() {
+            DiGraph rGraph;
+            for (int index = 0; index < v; index++) {
+                for (int w: ADJ(index)) {
+                    rGraph.AddEdge(w, index);
+                }
+            }
+            return rGraph;
         }
     };
 }
