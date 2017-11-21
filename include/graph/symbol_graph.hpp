@@ -17,11 +17,12 @@ using namespace std;
 using namespace search;
 
 namespace graph {
+    template <typename GraphType>
     class SymbolGraph {
     private:
         vector<string> keys;          // from index to symbol
         RBTree<string, int> symbols;  // from symbol to index
-        Graph g;                      // underling graph;
+        GraphType g;                      // underling graph;
     public:
         SymbolGraph(const string &pInFile, const string &pSp) {
             InStream lIn(pInFile);
@@ -41,7 +42,7 @@ namespace graph {
                 keys[fItem.second] = fItem.first;
             }
 
-            g = Graph(symbols.Size());
+            g = GraphType(symbols.Size());
             lIn.Reset();
 
             string lVStr, lWStr;
@@ -88,7 +89,7 @@ namespace graph {
             return rKeys;
         };
 
-        const Graph &GetGraph() {
+        const GraphType &GetGraph() {
             return g;
         }
     };

@@ -16,7 +16,7 @@ int main(const int argc, const char **argv) {
     string pFile = argv[1];
     string pSeparator = argv[2];
 
-    SymbolGraph sg(pFile, pSeparator);
+    SymbolGraph<Graph> sg(pFile, pSeparator);
     for (const string &key:sg.Keys()) {
         cout << key << ": " << endl;
         for (const string &adjKey:sg.ADJ(key)) {
