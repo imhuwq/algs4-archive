@@ -109,7 +109,7 @@ namespace graph {
 
         string ToString() {
             ostringstream os;
-            os << "DiGraph: " << v << " vertices, " << e << "e edges" << endl;
+            os << "DiGraph: " << v << " vertices, " << e << " edges" << endl;
             for (int index = 0; index < v; index++) {
                 os << index << ": ";
                 for (int w:ADJ(index)) {
