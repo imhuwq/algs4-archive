@@ -14,7 +14,7 @@ using namespace std;
 using namespace graph;
 
 namespace graph {
-    class Typology {
+    class Topology {
     private:
         bool hasCycle;
         vector<bool> marked;
@@ -42,7 +42,7 @@ namespace graph {
         }
 
     public:
-        explicit Typology(DiGraph &pDiGraph) : marked(pDiGraph.V(), false), onStack(pDiGraph.V(), false), edgeTo(pDiGraph.V(), -1), hasCycle(false) {
+        explicit Topology(DiGraph &pDiGraph) : marked(pDiGraph.V(), false), onStack(pDiGraph.V(), false), edgeTo(pDiGraph.V(), -1), hasCycle(false) {
             for (int v = 0; v < pDiGraph.V(); v++) {
                 if (!marked[v]) DFS(pDiGraph, v);
             }

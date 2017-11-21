@@ -89,7 +89,7 @@ namespace graph {
             return rKeys;
         };
 
-        const GraphType &GetGraph() {
+        GraphType GetGraph() {
             return g;
         }
     };
