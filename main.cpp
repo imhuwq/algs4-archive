@@ -1,5 +1,7 @@
 #include <string>
 #include <vector>
+#include <queue>
+#include <stack>
 #include <fstream>
 #include <iostream>
 
@@ -23,9 +25,19 @@ public:
 
 
 int main(int argc, const char **argv) {
-    string a = ",1,2,3, 5,,,,,";
-    vector<string> b = SplitString(a, ",");
-    for (string &s:b) {
-        cout << s << endl;
+    queue<int> a;
+    a.push(1);
+    a.push(2);
+    while (!a.empty()) {
+        cout << a.front() << endl;
+        a.pop();
+    }
+
+    stack<int> b;
+    b.push(1);
+    b.push(2);
+    while (!b.empty()) {
+        cout << b.top() << endl;
+        b.pop();
     }
 }

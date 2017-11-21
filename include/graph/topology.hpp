@@ -14,6 +14,46 @@ using namespace std;
 using namespace graph;
 
 namespace graph {
+    class DepthFirstOrder {
+    private:
+        vector<int> marked;
+        vector<int> pre;
+        vector<int> post;
+        deque<int> reversPost;
+
+        void DFS(DiGraph &pDiGraph, const int pV) {
+            marked[pV] = true;
+            pre.push_back(pV);
+            for (int lW:pDiGraph.ADJ(pV)) {
+                if (!marked[lW]) DFS(pDiGraph, lW);
+            }
+            post.push_back(pV);
+            reversPost.push_front(pV);
+        }
+
+    public:
+        DepthFirstOrder(DiGraph &pDiGraph) : marked(pDiGraph.V(), false),
+                                             pre(pDiGraph.V()),
+                                             post(pDiGraph.V()),
+                                             reversPost(pDiGraph.V()) {
+            for (int v = 0; v < pDiGraph.V(); v++) {
+                if (!marked[v]) DFS(pDiGraph, v);
+            }
+        }
+
+        vector<int> Pre() {
+            return pre;
+        }
+
+        vector<int> Post() {
+            return post;
+        }
+
+        vector<int> ReversePost() {
+            return vector<int>(reversPost.begin(), reversPost.end());
+        }
+    };
+
     class Topology {
     private:
         bool hasCycle;

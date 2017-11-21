@@ -121,7 +121,7 @@ namespace graph {
         }
 
         DiGraph Reverse() {
-            DiGraph rGraph;
+            DiGraph rGraph(v);
             for (int index = 0; index < v; index++) {
                 for (int w: ADJ(index)) {
                     rGraph.AddEdge(w, index);
