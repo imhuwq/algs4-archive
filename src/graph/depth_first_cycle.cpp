@@ -20,7 +20,7 @@ int main(int argc, const char **argv) {
     Graph graph(input);
 
     int source = cmd.second;
-    DepthFirstCycle dfc(graph);
+    Cycle dfc(graph);
 
     cout << graph.ToString() << endl;
 
