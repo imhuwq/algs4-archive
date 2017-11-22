@@ -45,6 +45,12 @@ public:
         return rInt;
     }
 
+    const double ReadDouble() {
+        double rDouble = INT32_MAX;
+        if (input) input >> rDouble;
+        return rDouble;
+    }
+
     const string ReadString() {
         string rStr;
         if (input) input >> rStr;

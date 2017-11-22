@@ -5,6 +5,7 @@
 #ifndef ALGS4_GRAPH_GRAPH_HPP
 #define ALGS4_GRAPH_GRAPH_HPP
 
+#include <memory>
 #include <vector>
 #include <sstream>
 #include <iostream>
@@ -128,6 +129,117 @@ namespace graph {
                 }
             }
             return rGraph;
+        }
+    };
+
+    class Edge {
+    private:
+        int v;
+        int w;
+        double weight;
+
+    public:
+        typedef shared_ptr<Edge> EdgePtr;
+
+        Edge(const int pV, const int pW, const double pWeight) : v(pV), w(pW), weight(pWeight) {}
+
+        int Either() { return v; }
+
+        int Other(const int pV) {
+            if (pV == v) return w;
+            else if (pV == w) return v;
+            throw runtime_error("vertex is not on the edge");
+        }
+
+        string ToString() {
+            ostringstream rStr;
+            rStr << "[" << v << "-" << w << "," << weight << "]";
+            return rStr.str();
+        }
+
+        bool operator==(const Edge &pEdge) {
+            return this->weight == pEdge.weight;
+        }
+
+        bool operator!=(const Edge &pEdge) {
+            return !(*this == pEdge);
+        }
+
+        bool operator>(const Edge &pEdge) {
+            return this->weight > pEdge.weight;
+        }
+
+        bool operator<(const Edge &pEdge) {
+            return !(*this > pEdge);
+        }
+
+        bool operator>=(const Edge &pEdge) {
+            return (*this > pEdge) or (*this == pEdge);
+        }
+
+        bool operator<=(const Edge &pEdge) {
+            return (*this < pEdge) or (*this == pEdge);
+        }
+    };
+
+    class EdgeWeightedGraph {
+    using EdgePtr = Edge::EdgePtr;
+    private:
+        int v;
+        int e;
+        vector<vector<EdgePtr>> adj;
+
+    public:
+        explicit EdgeWeightedGraph(const int pV) : v(pV), e(0), adj(0) {}
+
+        explicit EdgeWeightedGraph(InStream &pIn) {
+            v = pIn.ReadInt();
+            e = 0;
+            int edge = pIn.ReadInt();
+            adj.assign(v, {});
+            for (int index = 0; index < edge; index++) {
+                int v = pIn.ReadInt();
+                int w = pIn.ReadInt();
+                double weight = pIn.ReadDouble();
+                AddEdge(v, w, weight);
+            }
+        }
+
+        void AddEdge(const int pV, const int pW, const double pWeight) {
+            EdgePtr lEdge = make_shared<Edge>(pV, pW, pWeight);
+            adj[pV].push_back(lEdge);
+            adj[pW].push_back(lEdge);
+            e++;
+        }
+
+        void AddEdge(const EdgePtr &pEdge) {
+            int lV = pEdge->Either();
+            int lW = pEdge->Other(lV);
+            adj[lV].push_back(pEdge);
+            adj[lW].push_back(pEdge);
+            e++;
+        }
+
+        int V() {
+            return v;
+        }
+
+        int E() {
+            return e;
+        }
+
+        vector<EdgePtr> ADJ(const int pV) {
+            return adj[pV];
+        }
+
+        vector<EdgePtr> Edges() {
+            vector<EdgePtr> rEdges;
+            for (int fV = 0; fV < v; fV++) {
+                for (EdgePtr &edge:ADJ(fV)) {
+                    if (edge->Either() > v) rEdges.push_back(edge);
+                }
+            }
+            return rEdges;
         }
     };
 }
