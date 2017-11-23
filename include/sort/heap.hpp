@@ -17,7 +17,6 @@ namespace sort {
         int size = 0;
 
         void Exchange(const int pIndex1, const int pIndex2) {
-//            data[pIndex1], data[pIndex2] = data[pIndex2], data[pIndex1];
             Key tmp = data[pIndex1];
             data[pIndex1] = data[pIndex2];
             data[pIndex2] = tmp;
@@ -202,6 +201,103 @@ namespace sort {
             }
 
             pKeys.erase(pKeys.begin(), pKeys.begin() + 1);
+        }
+    };
+
+    template<typename Key>
+    class IndexMinPQ {
+    private:
+        vector<int> data;
+        vector<int> indices;
+        vector<Key> keys;
+        int size = 0;
+
+        void Exchange(const int pIndexInData1, const int pIndexInData2) {
+            int tmpIndex = data[pIndexInData1];
+            data[pIndexInData1] = data[pIndexInData2];
+            data[pIndexInData2] = tmpIndex;
+
+            indices[data[pIndexInData1]] = pIndexInData1;
+            indices[data[pIndexInData2]] = pIndexInData2;
+        }
+
+        bool Less(const int pIndexInData1, const int pIndexInData2) {
+            return keys[data[pIndexInData1]] < keys[data[pIndexInData2]];
+        }
+
+        bool More(const int pIndexInData1, const int pIndexInData2) {
+            return !Less(pIndexInData1, pIndexInData2);
+        }
+
+        void Swim(int pIndexInData) {
+            while (pIndexInData > 1 and Less(pIndexInData, pIndexInData / 2)) {
+                int lParentIndex = pIndexInData / 2;
+                Exchange(pIndexInData, pIndexInData / 2);
+                pIndexInData = pIndexInData / 2;
+            }
+        }
+
+        void Sink(int pIndexInData) {
+            while (pIndexInData * 2 <= size) {
+                int lChildIndex = pIndexInData * 2;
+                if (lChildIndex < size and More(lChildIndex, lChildIndex + 1)) lChildIndex++;
+                if (Less(pIndexInData, lChildIndex)) break;
+                Exchange(pIndexInData, lChildIndex);
+                pIndexInData = lChildIndex;
+            }
+        }
+
+    public:
+        explicit IndexMinPQ(const int pCap) : data(pCap + 1, -1), indices(pCap + 1, -1), keys(pCap, Key()), size(0) {}
+
+        bool IsEmpty() {
+            return size == 0;
+        }
+
+        int Size() {
+            return size;
+        }
+
+        void Insert(const int pIndex, const Key &pKey) {
+            size++;
+            indices[pIndex] = size;
+            data[size] = pIndex;
+            keys[pIndex] = pKey;
+            Swim(size);
+        }
+
+        bool DeleteMin(Key &rKey) {
+            if (size == 0) return false;
+            rKey = keys[data[1]];
+            return DeleteMin();
+        }
+
+        bool DeleteMin() {
+            if (size == 0) return false;
+            Exchange(1, size--);
+            Sink(1);
+            keys[data[size + 1]] = Key();
+            indices[data[size + 1]] = -1;
+            return true;
+        }
+
+        bool Contains(const int pIndex) {
+            return pIndex < size and indices[pIndex] != -1;
+        }
+
+        void Change(const int pIndex, const Key &pKey) {
+            keys[pIndex] = pKey;
+            Swim(indices[pIndex]);
+            Sink(indices[pIndex]);
+        }
+
+        void Delete(const int pIndex) {
+            if (!Contains(pIndex)) return;
+            Exchange(indices[pIndex], size--);
+            Swim(indices[pIndex]);
+            Sink(indices[pIndex]);
+            keys[data[size + 1]] = Key();
+            indices[data[size + 1]] = -1;
         }
     };
 }
