@@ -141,6 +141,8 @@ namespace graph {
     public:
         typedef shared_ptr<Edge> EdgePtr;
 
+        Edge() = default;
+
         Edge(const int pV, const int pW, const double pWeight) : v(pV), w(pW), weight(pWeight) {}
 
         int Either() { return v; }
@@ -150,6 +152,8 @@ namespace graph {
             else if (pV == w) return v;
             throw runtime_error("vertex is not on the edge");
         }
+
+        double Weight() { return weight; }
 
         string ToString() {
             ostringstream rStr;
@@ -183,7 +187,7 @@ namespace graph {
     };
 
     class EdgeWeightedGraph {
-    using EdgePtr = Edge::EdgePtr;
+        using EdgePtr = Edge::EdgePtr;
     private:
         int v;
         int e;

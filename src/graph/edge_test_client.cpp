@@ -20,4 +20,7 @@ int main() {
     delete e5;
     cout << e4->ToString() << endl;
 
+    shared_ptr<Edge> e6 = make_shared<Edge>(0, 0, 0.1);
+    if (e4 < e6) cout << "e4 < e6" << endl;
+    else cout << "e4 >= e6" << endl;
 }
