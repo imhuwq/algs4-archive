@@ -141,7 +141,7 @@ namespace graph {
     public:
         typedef shared_ptr<Edge> EdgePtr;
 
-        Edge() = default;
+        Edge() : v(0), w(0), weight(0.0) {};
 
         Edge(const int pV, const int pW, const double pWeight) : v(pV), w(pW), weight(pWeight) {}
 
@@ -240,7 +240,17 @@ namespace graph {
             vector<EdgePtr> rEdges;
             for (int fV = 0; fV < v; fV++) {
                 for (EdgePtr &edge:ADJ(fV)) {
-                    if (edge->Either() > v) rEdges.push_back(edge);
+                    if (edge->Other(fV) > fV) rEdges.push_back(edge);
+                }
+            }
+            return rEdges;
+        }
+
+        vector<Edge> EdgesObj() {
+            vector<Edge> rEdges;
+            for (int fV = 0; fV < v; fV++) {
+                for (EdgePtr &edge:ADJ(fV)) {
+                    if (edge->Other(fV) > fV) rEdges.push_back(*edge);
                 }
             }
             return rEdges;

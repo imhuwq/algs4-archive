@@ -12,10 +12,12 @@
 
 #include "sort/heap.hpp"
 #include "graph/graph.hpp"
+#include "search/union.hpp"
 
 using namespace std;
 using namespace sort;
 using namespace graph;
+using namespace search;
 
 const double DBL_MAX(numeric_limits<double>::max());
 
@@ -104,6 +106,32 @@ namespace graph {
             }
             return weight;
         }
+    };
+
+    class KruskalMST {
+    private:
+        MinPQ<Edge> pq;
+        WeightedQuickUnionUF uf;
+        vector<Edge> edges;
+        double weight;
+
+    public:
+        explicit KruskalMST(EdgeWeightedGraph &pG) : uf(pG.V()), pq(pG.EdgesObj()) {
+            Edge lMinEdge = Edge();
+            while (!pq.IsEmpty() and edges.size() < pG.V() - 1) {
+                pq.DeleteMin(lMinEdge);
+                int lV = lMinEdge.Either();
+                int lW = lMinEdge.Other(lV);
+                if (uf.Connected(lV, lW)) continue;
+                uf.Union(lV, lW);
+                edges.push_back(lMinEdge);
+                weight += lMinEdge.Weight();
+            }
+        }
+
+        vector<Edge> Edges() { return edges; }
+
+        double Weight() { return weight; }
     };
 }
 

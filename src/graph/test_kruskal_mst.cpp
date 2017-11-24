@@ -19,7 +19,7 @@ int main(const int argc, const char **argv) {
     InStream input(cmd.first);
     EdgeWeightedGraph graph(input);
 
-    PrimMST mst(graph);
+    KruskalMST mst(graph);
 
     for (Edge &e: mst.Edges()) {
         cout << e.ToString() << endl;
