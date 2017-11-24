@@ -8,6 +8,7 @@
 #include <queue>
 #include <vector>
 #include <memory>
+#include <limits>
 
 #include "sort/heap.hpp"
 #include "graph/graph.hpp"
@@ -15,6 +16,8 @@
 using namespace std;
 using namespace sort;
 using namespace graph;
+
+const double DBL_MAX(numeric_limits<double>::max());
 
 namespace graph {
     class LazyPrimMST {
@@ -51,6 +54,54 @@ namespace graph {
         }
 
         double Weight() {
+            return weight;
+        }
+    };
+
+    class PrimMST {
+    private:
+        vector<Edge> edgeTo;
+        vector<double> distTo;
+        vector<bool> marked;
+        IndexMinPQ<double> pq;
+        double weight = -1.0;
+
+        void Visit(EdgeWeightedGraph &pG, const int pV) {
+            marked[pV] = true;
+            for (Edge::EdgePtr &edge: pG.ADJ(pV)) {
+                int lW = edge->Other(pV);
+                if (marked[lW]) continue;
+                if (edge->Weight() < distTo[lW]) {
+                    edgeTo[lW] = *edge;
+                    distTo[lW] = edge->Weight();
+                    if (pq.Contains(lW)) pq.Change(lW, edge->Weight());
+                    else pq.Insert(lW, edge->Weight());
+                }
+            }
+        }
+
+    public:
+        explicit PrimMST(EdgeWeightedGraph &pG) : edgeTo(pG.V()), distTo(pG.V(), DBL_MAX), marked(pG.V(), false), pq(pG.V()) {
+            pq.Insert(0, 0.0);
+            int lV;
+            while (!pq.IsEmpty()) {
+                pq.DeleteMinIndex(lV);
+                Visit(pG, lV);
+            }
+        }
+
+        vector<Edge> Edges() {
+            return edgeTo;
+        }
+
+        double Weight() {
+            if (weight < 0) {
+                double lWeight = 0.0;
+                for (auto &edge:edgeTo) {
+                    lWeight += edge.Weight();
+                }
+                weight = lWeight;
+            }
             return weight;
         }
     };

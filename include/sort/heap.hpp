@@ -272,6 +272,12 @@ namespace sort {
             return DeleteMin();
         }
 
+        bool DeleteMinIndex(int &rIndex) {
+            if (size == 0) return false;
+            rIndex = data[1];
+            return DeleteMin();
+        }
+
         bool DeleteMin() {
             if (size == 0) return false;
             Exchange(1, size--);
