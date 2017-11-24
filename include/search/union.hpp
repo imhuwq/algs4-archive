@@ -92,7 +92,7 @@ namespace search {
                 parents[idV] = idW;
             } else {
                 sizes[pV] += sizes[pW];
-                parents[pW] = idV;
+                parents[idW] = idV;
             }
             count--;
         }
