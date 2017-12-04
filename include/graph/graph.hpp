@@ -283,7 +283,7 @@ namespace graph {
 
         string ToString() {
             ostringstream str;
-            str << from << "->" << to << " " << weight << endl;
+            str << from << "->" << to << " " << weight;
             return str.str();
         }
     };
