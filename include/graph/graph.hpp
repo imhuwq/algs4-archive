@@ -27,12 +27,15 @@ namespace graph {
         explicit Graph(const int &pV) : v(pV), e(0), adj(v) {}
 
         explicit Graph(InStream &pIn) {
-            v = pIn.ReadInt();
-            int edge = pIn.ReadInt();
+            pIn.ReadInt(v);
+            int edge;
+            pIn.ReadInt(edge);
             adj.assign(v, {});
+
+            int v, w;
             for (int index = 0; index < edge; index++) {
-                int v = pIn.ReadInt();
-                int w = pIn.ReadInt();
+                pIn.ReadInt(v);
+                pIn.ReadInt(w);
                 AddEdge(v, w);
             }
         }
@@ -81,12 +84,15 @@ namespace graph {
         explicit DiGraph(const int pV) : v(pV), e(0), adj(pV) {}
 
         explicit DiGraph(InStream &pIn) {
-            v = pIn.ReadInt();
-            int edge = pIn.ReadInt();
+            pIn.ReadInt(v);
+            int edge;
+            pIn.ReadInt(edge);
             adj.assign(v, {});
+
+            int v, w;
             for (int index = 0; index < edge; index++) {
-                int v = pIn.ReadInt();
-                int w = pIn.ReadInt();
+                pIn.ReadInt(v);
+                pIn.ReadInt(w);
                 AddEdge(v, w);
             }
         }
@@ -189,22 +195,26 @@ namespace graph {
     class EdgeWeightedGraph {
         using EdgePtr = Edge::EdgePtr;
     private:
-        int v;
-        int e;
+        int v = 0;
+        int e = 0;
         vector<vector<EdgePtr>> adj;
 
     public:
         explicit EdgeWeightedGraph(const int pV) : v(pV), e(0), adj(0) {}
 
         explicit EdgeWeightedGraph(InStream &pIn) {
-            v = pIn.ReadInt();
+            pIn.ReadInt(v);
             e = 0;
-            int edge = pIn.ReadInt();
+            int edge;
+            pIn.ReadInt(edge);
             adj.assign(v, {});
+
+            int v, w;
+            double weight;
             for (int index = 0; index < edge; index++) {
-                int v = pIn.ReadInt();
-                int w = pIn.ReadInt();
-                double weight = pIn.ReadDouble();
+                pIn.ReadInt(v);
+                pIn.ReadInt(w);
+                pIn.ReadDouble(weight);
                 AddEdge(v, w, weight);
             }
         }
@@ -254,6 +264,91 @@ namespace graph {
                 }
             }
             return rEdges;
+        }
+    };
+
+    class DirectedEdge {
+    private:
+        int from;
+        int to;
+        double weight;
+    public:
+        DirectedEdge(const int pFrom, const int pTo, const double pWeight) : from(pFrom), to(pTo), weight(pWeight) {}
+
+        int From() { return from; }
+
+        int To() { return to; }
+
+        double Weight() { return weight; }
+
+        string ToString() {
+            ostringstream str;
+            str << from << "->" << to << " " << weight << endl;
+            return str.str();
+        }
+    };
+
+    typedef shared_ptr<DirectedEdge> DiEdgePtr;
+
+    class EdgeWeightedDigraph {
+    private:
+        int v = 0;
+        int e = 0;
+        vector<vector<DiEdgePtr>> adj;
+    public:
+        explicit EdgeWeightedDigraph(int pV) : v(pV), e(0) {
+            adj.assign(v, {});
+        }
+
+        explicit EdgeWeightedDigraph(InStream& pIn) {
+            pIn.ReadInt(v);
+            pIn.ReadInt(e);
+            adj.assign(e, {});
+
+            int from, to;
+            double weight;
+            for (int index = 0; index < e; index++) {
+                pIn.ReadInt(from);
+                pIn.ReadInt(to);
+                pIn.ReadDouble(weight);
+                DiEdgePtr lEdge = make_shared<DirectedEdge>(from, to, weight);
+                adj[from].push_back(lEdge);
+            }
+        }
+
+        int V() { return v; }
+
+        int E() { return e; }
+
+        void AddEdge(const DiEdgePtr &pEdge) {
+            adj[pEdge->From()].push_back(pEdge);
+        }
+
+        vector<DiEdgePtr> ADJ(const int pV) {
+            return adj[pV];
+        }
+
+        vector<DiEdgePtr> Edges() {
+            vector<DiEdgePtr> rEdges;
+            for (int i = 0; i < v; i++) {
+                for (DiEdgePtr fEdge: ADJ(i)) {
+                    rEdges.push_back(fEdge);
+                }
+            }
+            return rEdges;
+        }
+
+        string ToString() {
+            ostringstream rStr;
+            rStr << v << "Vertices, " << e << " Edges" << endl;
+            for (int i = 0; i < v; i++) {
+                rStr << i << ": ";
+                for (DiEdgePtr fEdge: ADJ(i)) {
+                    rStr << "[" << fEdge->To() << ", " << fEdge->Weight() << "]  ";
+                }
+                rStr << endl;
+            }
+            return rStr.str();
         }
     };
 }

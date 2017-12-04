@@ -39,22 +39,28 @@ private:
 public:
     explicit InStream(const string &pFilePath) : inputPath(pFilePath), input(pFilePath) {}
 
-    const int ReadInt() {
-        int rInt = INT32_MAX;
-        if (input) input >> rInt;
-        return rInt;
+    bool ReadInt(int& rInt) {
+        if (input) {
+            input >> rInt;
+            return true;
+        }
+        return false;
     }
 
-    const double ReadDouble() {
-        double rDouble = INT32_MAX;
-        if (input) input >> rDouble;
-        return rDouble;
+    bool ReadDouble(double& rDouble) {
+        if (input) {
+            input >> rDouble;
+            return true;
+        }
+        return false;
     }
 
-    const string ReadString() {
-        string rStr;
-        if (input) input >> rStr;
-        return rStr;
+    bool ReadString(string& rStr) {
+        if (input) {
+            input >> rStr;
+            return true;
+        }
+        return false;
     }
 
     bool ReadLine(string &rLine) {
