@@ -38,14 +38,16 @@ namespace graph {
         }
     };
 
-
+    template <typename DiGraphType>
     class DirectedCycle {
     private:
         vector<bool> marked;
-        vector<int> edgeTo;
         vector<bool> onStack;
         deque<int> cycle;
-
+        vector<int> edgeTo;
+        deque<DiEdgePtr> cycleE;
+        vector<DiEdgePtr> edgeToE;
+        bool hasCycle = false;
 
         void DFS(DiGraph &pDigraph, const int v) {
             marked[v] = true;
@@ -56,6 +58,7 @@ namespace graph {
                     edgeTo[w] = v;
                     DFS(pDigraph, w);
                 } else if (onStack[w]) {
+                    hasCycle = true;
                     for (int x = v; x != w; x = edgeTo[x]) {
                         cycle.push_front(x);
                     }
@@ -67,19 +70,50 @@ namespace graph {
             onStack[v] = false;
         }
 
+        void DFS(EdgeWeightedDigraph& pDigraph, const int v) {
+            marked[v] = true;
+            onStack[v] = true;
+            for (DiEdgePtr& fEdge: pDigraph.ADJ(v)) {
+                string zsdz = fEdge->ToString();
+                int w = fEdge->To();
+                if (HasCycle()) return;
+                else if (!marked[w]) {
+                    edgeToE[w] = fEdge;
+                    DFS(pDigraph, w);
+                } else if (onStack[w]) {
+                    hasCycle = true;
+                    cycleE.push_front(fEdge);
+                    for (DiEdgePtr x = edgeToE[fEdge->From()]; x != nullptr; x = edgeToE[x->From()]) {
+                        string zz = x->ToString();
+                        DiEdgePtr xxx = edgeToE[x->From()];
+                        cycleE.push_front(x);
+                    }
+                }
+            }
+
+            onStack[v] = false;
+        }
+
     public:
-        explicit DirectedCycle(DiGraph &pDigraph) : marked(pDigraph.V()), edgeTo(pDigraph.V()), onStack(pDigraph.V()) {
+        explicit DirectedCycle(DiGraphType &pDigraph) : marked(pDigraph.V(), false),
+                                                        edgeTo(pDigraph.V(), -1),
+                                                        edgeToE(pDigraph.V(), nullptr),
+                                                        onStack(pDigraph.V(), false) {
             for (int v = 0; v < pDigraph.V(); v++) {
                 if (!marked[v]) DFS(pDigraph, v);
             }
         }
 
         bool HasCycle() {
-            return cycle.size() != 0;
+            return hasCycle;
         }
 
         vector<int> Cycle() {
             return vector<int>(cycle.begin(), cycle.end());
+        }
+
+        vector<DiEdgePtr> WightedCycle() {
+            return vector<DiEdgePtr>(cycleE.begin(), cycleE.end());;
         }
     };
 }

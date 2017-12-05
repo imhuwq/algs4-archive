@@ -20,7 +20,7 @@ int main(int argc, const char **argv) {
     DiGraph graph(input);
 
     int source = cmd.second;
-    DirectedCycle dfc(graph);
+    DirectedCycle<DiGraph> dfc(graph);
 
     cout << graph.ToString() << endl;
 
