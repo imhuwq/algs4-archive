@@ -10,6 +10,7 @@
 #include <limits>
 
 #include "graph.hpp"
+#include "topology.hpp"
 #include "sort/heap.hpp"
 
 using namespace std;
@@ -27,8 +28,8 @@ namespace graph {
         vector<DiEdgePtr> edgeTo;
     public:
         SPT(EdgeWeightedDigraph &pGraph, const int pS) : graph(pGraph), source(pS),
-                                                         distTo((unsigned long)graph.V(), INF),
-                                                         edgeTo((unsigned long)pGraph.V(), nullptr) {}
+                                                         distTo((unsigned long) graph.V(), INF),
+                                                         edgeTo((unsigned long) pGraph.V(), nullptr) {}
 
         double DistTo(const int pV) {
             return this->distTo[pV];
@@ -60,8 +61,6 @@ namespace graph {
         void Relax(EdgeWeightedDigraph &pGraph, const int pV) {
             for (DiEdgePtr fEdge: pGraph.ADJ(pV)) {
                 int lW = fEdge->To();
-                double t1 = this->distTo[lW];
-                double t2 = this->distTo[pV];
                 double weight = fEdge->Weight();
                 if (this->distTo[lW] > this->distTo[pV] + weight) {
                     this->distTo[lW] = this->distTo[pV] + weight;
@@ -81,6 +80,27 @@ namespace graph {
                 pq.DeleteMinIndex(lV);
                 Relax(pGraph, lV);
             }
+        }
+    };
+
+    class AcyclicSP : public SPT {
+    private:
+        void Relax(EdgeWeightedDigraph &pGraph, const int pV) {
+            for (DiEdgePtr& fEdge: pGraph.ADJ(pV)) {
+                const int fW = fEdge->To();
+                double fWeight = this->distTo[pV] + fEdge->Weight();
+                if (this->distTo[fW] > fWeight) {
+                    this->distTo[fW] = fWeight;
+                    this->edgeTo[fW] = fEdge;
+                }
+            }
+        }
+
+    public:
+        AcyclicSP(EdgeWeightedDigraph &pGraph, const int pS) : SPT(pGraph, pS) {
+            this->distTo[pS] = 0;
+            Topology<EdgeWeightedDigraph> lTopology(pGraph);
+            for (int fV: lTopology.Order()) Relax(pGraph, fV);
         }
     };
 }

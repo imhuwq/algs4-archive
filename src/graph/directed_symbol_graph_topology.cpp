@@ -19,7 +19,7 @@ int main(const int argc, const char **argv) {
 
     SymbolGraph<DiGraph> sg(pFile, pSeparator);
     DiGraph g = sg.GetGraph();
-    Topology topo(g);
+    Topology<DiGraph> topo(g);
 
     if (topo.IsDAG()) {
         string lKey;

@@ -54,6 +54,7 @@ namespace graph {
         }
     };
 
+    template <typename DiGraphType>
     class Topology {
     private:
         bool hasCycle;
@@ -81,8 +82,28 @@ namespace graph {
             order.push_front(pV);
         }
 
+        void DFS(EdgeWeightedDigraph &pDiGraph, const int pV) {
+            marked[pV] = true;
+            onStack[pV] = true;
+
+            for (DiEdgePtr& fEdge: pDiGraph.ADJ(pV)) {
+                int fW = fEdge->To();
+                if (hasCycle) return;
+                if (!marked[fW]) {
+                    edgeTo[fW] = pV;
+                    DFS(pDiGraph, fW);
+                } else if (onStack[fW]) {
+                    hasCycle = true;
+                    return;
+                }
+            }
+
+            onStack[pV] = false;
+            order.push_front(pV);
+        }
+
     public:
-        explicit Topology(DiGraph &pDiGraph) : marked(pDiGraph.V(), false), onStack(pDiGraph.V(), false), edgeTo(pDiGraph.V(), -1), hasCycle(false) {
+        explicit Topology(DiGraphType &pDiGraph) : marked(pDiGraph.V(), false), onStack(pDiGraph.V(), false), edgeTo(pDiGraph.V(), -1), hasCycle(false) {
             for (int v = 0; v < pDiGraph.V(); v++) {
                 if (!marked[v]) DFS(pDiGraph, v);
             }

@@ -20,7 +20,7 @@ int main(const int argc, const char **argv) {
     DiGraph graph(input);
 
     int source = cmd.second;
-    Topology topo(graph);
+    Topology<DiGraph> topo(graph);
 
     cout << graph.ToString() << endl;
 
