@@ -22,13 +22,10 @@ namespace graph {
 
     class SPT {
     protected:
-        EdgeWeightedDigraph &graph;
-        int source;
         vector<double> distTo;
         vector<DiEdgePtr> edgeTo;
     public:
-        SPT(EdgeWeightedDigraph &pGraph, const int pS) : graph(pGraph), source(pS),
-                                                         distTo((unsigned long) graph.V(), INF),
+        SPT(EdgeWeightedDigraph &pGraph, const int pS) : distTo((unsigned long) pGraph.V(), INF),
                                                          edgeTo((unsigned long) pGraph.V(), nullptr) {}
 
         double DistTo(const int pV) {
@@ -86,7 +83,7 @@ namespace graph {
     class AcyclicSP : public SPT {
     private:
         void Relax(EdgeWeightedDigraph &pGraph, const int pV) {
-            for (DiEdgePtr& fEdge: pGraph.ADJ(pV)) {
+            for (DiEdgePtr &fEdge: pGraph.ADJ(pV)) {
                 const int fW = fEdge->To();
                 double fWeight = this->distTo[pV] + fEdge->Weight();
                 if (this->distTo[fW] > fWeight) {
@@ -101,6 +98,35 @@ namespace graph {
             this->distTo[pS] = 0;
             Topology<EdgeWeightedDigraph> lTopology(pGraph);
             for (int fV: lTopology.Order()) Relax(pGraph, fV);
+        }
+    };
+
+    class AcyclicLP {
+    private:
+        vector<double> distTo;
+        vector<DiEdgePtr> edgeTo;
+
+        void Relax(EdgeWeightedDigraph &pGraph, const int pV) {
+            for (DiEdgePtr &fEdge: pGraph.ADJ(pV)) {
+                const int fW = fEdge->To();
+                double fWeight = distTo[pV] + fEdge->Weight();
+                if (distTo[fW] < fWeight) {
+                    distTo[fW] = fWeight;
+                    edgeTo[fW] = fEdge;
+                }
+            }
+        }
+
+    public:
+        AcyclicLP(EdgeWeightedDigraph &pGraph, const int pS) : distTo((unsigned long) pGraph.V(), -INF),
+                                                               edgeTo((unsigned long) pGraph.V(), nullptr) {
+            this->distTo[pS] = 0;
+            Topology<EdgeWeightedDigraph> lTopology(pGraph);
+            for (int fV: lTopology.Order()) Relax(pGraph, fV);
+        }
+
+        double DistTo(const int pV) {
+            return distTo[pV];
         }
     };
 }

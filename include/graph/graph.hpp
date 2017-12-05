@@ -322,6 +322,7 @@ namespace graph {
 
         void AddEdge(const DiEdgePtr &pEdge) {
             adj[pEdge->From()].push_back(pEdge);
+            e++;
         }
 
         vector<DiEdgePtr> ADJ(const int pV) {

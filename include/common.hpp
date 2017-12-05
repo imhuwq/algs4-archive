@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <type_traits>
 
 using namespace std;
 
@@ -39,7 +40,7 @@ private:
 public:
     explicit InStream(const string &pFilePath) : inputPath(pFilePath), input(pFilePath) {}
 
-    bool ReadInt(int& rInt) {
+    bool ReadInt(int &rInt) {
         if (input) {
             input >> rInt;
             return true;
@@ -47,7 +48,7 @@ public:
         return false;
     }
 
-    bool ReadDouble(double& rDouble) {
+    bool ReadDouble(double &rDouble) {
         if (input) {
             input >> rDouble;
             return true;
@@ -55,7 +56,7 @@ public:
         return false;
     }
 
-    bool ReadString(string& rStr) {
+    bool ReadString(string &rStr) {
         if (input) {
             input >> rStr;
             return true;
@@ -66,6 +67,11 @@ public:
     bool ReadLine(string &rLine) {
         if (getline(input, rLine)) return true;
         return false;
+    }
+
+    bool ToNextLine() {
+        string _;
+        return ReadLine(_);
     }
 
     bool ReadStringsByLine(vector<string> &rStrings, const string pSp) {
@@ -85,6 +91,16 @@ public:
     void Reset() {
         input.clear();
         input.seekg(0, ios::beg);
+    }
+
+    template<typename T>
+    static
+    typename enable_if<is_arithmetic<T>::value, T>::type
+    ParseNumber(const string &str) {
+        stringstream ss(str);
+        T rT;
+        ss >> rT;
+        return rT;
     }
 
     ~InStream() {
