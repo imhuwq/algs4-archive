@@ -74,7 +74,6 @@ namespace graph {
             marked[v] = true;
             onStack[v] = true;
             for (DiEdgePtr& fEdge: pDigraph.ADJ(v)) {
-                string zsdz = fEdge->ToString();
                 int w = fEdge->To();
                 if (HasCycle()) return;
                 else if (!marked[w]) {
@@ -82,12 +81,12 @@ namespace graph {
                     DFS(pDigraph, w);
                 } else if (onStack[w]) {
                     hasCycle = true;
-                    cycleE.push_front(fEdge);
-                    for (DiEdgePtr x = edgeToE[fEdge->From()]; x != nullptr; x = edgeToE[x->From()]) {
-                        string zz = x->ToString();
-                        DiEdgePtr xxx = edgeToE[x->From()];
+                    DiEdgePtr x = fEdge;
+                    while (x->From() != w) {
                         cycleE.push_front(x);
+                        x = edgeToE[x->From()];
                     }
+                    cycleE.push_front(x);
                 }
             }
 
